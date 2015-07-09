@@ -7,7 +7,7 @@
   Fork & report problems at https://github.com/ProgerXP/FileDrop
 */
 
-;(function (root, init) {
+(function (root, init) {
   if (typeof define == 'function' && define.amd) {
     define(['exports'], function (exports) { init(root, exports) })
   } else if (typeof exports !== 'undefined') {
@@ -27,7 +27,7 @@
   //? randomID('foo')   //=> 'foo_1582'
   global.randomID = function (prefix) {
     return (prefix || 'fd') + '_' + (Math.random() * 10000).toFixed()
-  }
+  };
 
   // Generates random DOM node ID that's unique to this document with given prefix
   // or 'fd' if it's not passed.
@@ -35,9 +35,9 @@
   //? randomID()        //=> 'fd_9854'
   //? randomID('foo')   //=> 'foo_1582'
   global.uniqueID = function (prefix) {
-    do { var id = global.randomID(prefix) } while (global.byID(id))
-    return id
-  }
+    do { var id = global.randomID(prefix) } while (global.byID(id));
+    return id;
+  };
 
   // Retrieves DOM element by its ID attribute or returns id itself if it's
   // an element.
@@ -50,8 +50,8 @@
   //? byID(document.createElement('p'))
   //    //=> <p>
   global.byID = function (id) {
-    return global.isTag(id) ? id : document.getElementById(id)
-  }
+    return global.isTag(id) ? id : document.getElementById(id);
+  };
 
   // Checks if given object is a proper DOM node. If tag is passed also
   // checks if that DOM node is of the same tag (case-insensitive).
@@ -78,8 +78,8 @@
   //    //=> false
   global.isTag = function (element, tag) {
     return typeof element == 'object' && element && element.nodeType == 1 &&
-           ( !tag || element.tagName.toUpperCase() == tag.toUpperCase() )
-  }
+           ( !tag || element.tagName.toUpperCase() == tag.toUpperCase() );
+  };
 
   // Creates new XMLHttpRequest object. Falls back for ActiveX for IE 6.
   // Throws an exception if couldn't succeed (this shouldn't happen these days).
@@ -92,7 +92,7 @@
       // IE 6.
       var activex = ['MSXML2.XMLHTTP.6.0', 'MSXML2.XMLHTTP.5.0',
                      'MSXML2.XMLHTTP.4.0', 'MSXML2.XMLHTTP.3.0',
-                     'MSXML2.XMLHTTP', 'Microsoft.XMLHTTP']
+                     'MSXML2.XMLHTTP', 'Microsoft.XMLHTTP'];
 
       for (var i = 0; i < activex.length; i++) {
         try {
@@ -102,7 +102,7 @@
     }
 
     throw 'Cannot create XMLHttpRequest.'
-  }
+  };
 
   // Checks if given value is a native Array object. Note that jQuery and
   // other pseudo-arrays are reported as false.
@@ -118,7 +118,7 @@
   //? isArray($('a').toArray())   //=> true
   global.isArray = function (value) {
     return Object.prototype.toString.call(value) === '[object Array]'
-  }
+  };
 
   // Converts passed value into an array. If value is already an array its
   // copy is returned (so changing value later doesn't affect the returned
@@ -159,7 +159,7 @@
     }
 
     return Array.prototype.slice.call(value, skipFirst || 0)
-  }
+  };
 
   // Adds an event listener to a DOM element. Works for old IE as well
   // as modern W3C-compliant browsers. type is short event name (without
@@ -178,10 +178,10 @@
   global.addEvent = function (element, type, callback) {
     if (element && type && callback) {
       if (element.attachEvent) {
-        element['e' + type + callback] = callback
+        element['e' + type + callback] = callback;
         element[type + callback] = function() {
           element['e' + type + callback](window.event)
-        }
+        };
         element.attachEvent('on' + type, element[type + callback])
       } else {
         element.addEventListener(type, callback, false)
@@ -189,19 +189,19 @@
     }
 
     return element
-  }
+  };
 
   // Stops propagation and default browser action of an event.
   // Works for old IE and modern W3C-compliant browsers.
   //
   //? byID('p').onmousemove = function (e) { stopEvent(e) }
   global.stopEvent = function (event) {
-    event.cancelBubble = true
-    event.returnValue = false
-    event.stopPropagation && event.stopPropagation()
-    event.preventDefault && event.preventDefault()
+    event.cancelBubble = true;
+    event.returnValue = false;
+    event.stopPropagation && event.stopPropagation();
+    event.preventDefault && event.preventDefault();
     return event
-  }
+  };
 
   // Adds or removes HTML class of a DOM element. Keeps old classes.
   // element can be either ID string or a DOM node.
@@ -225,7 +225,7 @@
     }
 
     return element
-  }
+  };
 
   // Determines if given element has class attribute containing the className
   // word. Accepts DOM element or ID string. Returns true or false.
@@ -244,7 +244,7 @@
   //? hasClass(window, foo)           //=> false
   global.hasClass = function (element, className) {
     return global.classRegExp(className).test( (global.byID(element) || {}).className )
-  }
+  };
 
   // Returns a regular expression suitable for testing of HTML class-like
   // strings to find out if it contains a given word or not (it's not as
@@ -268,11 +268,11 @@
   //? classRegExp(null).test('foo')  //=> false (always)
   global.classRegExp = function (className) {
     if (className == '' || typeof className == 'object') {
-      return /$o_O/  // never matches.
+      return /$o_O/;  // never matches.
     } else {
       return new RegExp('(^|\\s+)' + className + '(\\s+|$)', 'gi')
     }
-  }
+  };
 
   // Copies properties from object base to object child. If overwrite
   // is passed and true then base's properties will replace those
@@ -296,8 +296,8 @@
   //  extend(child, {x: 1}) === child   //=> true (same object)
   //  console.dir(child)    //=> {y: 1, x: 1}
   global.extend = function (child, base, overwrite) {
-    child = child || {}
-    base = base || {}
+    child = child || {};
+    base = base || {};
 
     for (var prop in base) {
       if (overwrite || typeof child[prop] == 'undefined') {
@@ -306,7 +306,7 @@
     }
 
     return child
-  }
+  };
 
   /***
     Event Manipulation Functions
@@ -344,14 +344,14 @@
   //      // equivalent to callAll([...], toArray(arguments), window)
   //  }
   global.callAll = function (list, args, obj) {
-    var res
-    args = global.toArray(args)
-    typeof list == 'function' && (list = [list])
+    var res;
+    args = global.toArray(args);
+    typeof list == 'function' && (list = [list]);
 
     if (global.isArray(list)) {
       for (var i = 0; i < list.length; i++) {
         if (typeof list[i] == 'function') {
-          res = list[i].apply(obj || this, args)
+          res = list[i].apply(obj || this, args);
           if (res != null) { break }
         }
       }
@@ -361,7 +361,7 @@
     }
 
     return res
-  }
+  };
 
   // Calls event handlers attached on given FileDrop object to passed
   // event name with arguments. Hands off most work to callAll().
@@ -390,74 +390,75 @@
   //    // any event we call will return false bypassing its actual handlers.
   global.callAllOfObject = function (obj, event, args) {
     if (global.logging && global.hasConsole) {
-      var handlers = obj.events[event] ? obj.events[event].length || 0 : 0
-      console.info('FileDrop ' + event + ' event (' + handlers + ') args:')
+      var handlers = obj.events[event] ? obj.events[event].length || 0 : 0;
+      console.info('FileDrop ' + event + ' event (' + handlers + ') args:');
       console.dir([args])
     }
 
-    var preview = [global.onObjectCall].concat(obj.events.any)
-    var res = global.callAll(preview, [event].concat(global.toArray(args)), obj)
+    var preview = [global.onObjectCall].concat(obj.events.any);
+    var res = global.callAll(preview, [event].concat(global.toArray(args)), obj);
     return res != null ? res : global.callAll(obj.events[event], args, obj)
-  }
+  };
 
   // Appends event listeners to given object with 'events' property according
   // to passed parameters. See DropHandle.event() for details.
   // 'this' must be set to the object which events are updated.
   global.appendEventsToObject = function (events, funcs) {
     if (global.addEventsToObject(this, false, arguments)) {
-      return this
+      return this;
     }
 
+    var i;
     switch (arguments.length) {
     case 0:
-      return global.extend({}, this.events)
+      return global.extend({}, this.events);
 
     case 1:
       if (events === null) {
-        this.events = {}
-        return this
+        this.events = {};
+        return this;
       } else if (global.isArray(events)) {
-        var res = {}
+        var res = {};
 
-        for (var i = 0; i < events.length; i++) {
+        for (i = 0; i < events.length; i++) {
           res[events[i]] = global.toArray(this.events[events[i]])
         }
 
-        return res
+        return res;
       } else if (typeof events == 'function') {
-        return global.funcNS(events)
+        return global.funcNS(events);
       } else if (typeof events == 'string') {
-        return global.toArray(this.events[events])
+        return global.toArray(this.events[events]);
       }
 
     case 2:
-      events = global.toArray(events)
+      events = global.toArray(events);
 
       if (funcs === null) {
-        for (var i = 0; i < events.length; i++) {
-          var ns = global.splitNS(events[i])
+        for (i = 0; i < events.length; i++) {
+          var ns = global.splitNS(events[i]);
 
           if (!ns[0]) {
             for (var event in this.events) {
-              arguments.callee.call(this, [event + ':' + ns[1]], null)
+              arguments.callee.call(this, [event + ':' + ns[1]], null);
             }
           } else if (!ns[1]) {
             this.events[ns[0]] = []
           } else if (this.events[ns[0]]) {
             for (var fi = this.events[ns[0]].length - 1; fi >= 0; fi--) {
               if (global.funcNS( this.events[ns[0]][fi] ) == ns[1]) {
-                this.events[ns[0]].splice(fi, 1)
+                this.events[ns[0]].splice(fi, 1);
               }
             }
           }
         }
 
-        return this
+        return this;
       }
     }
 
     throw 'Bad parameters for FileDrop event().'
-  }
+  };
 
   // Prepends event listeners to given object with 'events' property according
   // to passed parameters. See DropHandle.event() for details.
@@ -468,14 +469,14 @@
     } else {
       throw 'Bad parameters for FileDrop preview().'
     }
-  }
+  };
 
   // Adds event listeners to given object with 'events' property according
   // to passed parameters. See DropHandle.event() for details.
   // Returns nothing if couldn't handle given parameter combination.
   global.addEventsToObject = function (obj, prepend, args) {
-    var events = args[0]
-    var funcs = args[1]
+    var events = args[0];
+    var funcs = args[1];
 
     switch (args.length) {
     case 1:
@@ -489,24 +490,24 @@
 
     case 2:
       if (typeof funcs == 'function' || global.isArray(funcs)) {
-        events = global.toArray(events)
-        funcs = global.toArray(funcs)
-        var pusher = prepend ? 'unshift' : 'push'
+        events = global.toArray(events);
+        funcs = global.toArray(funcs);
+        var pusher = prepend ? 'unshift' : 'push';
 
         for (var i = 0; i < events.length; i++) {
-          var ns = global.splitNS(events[i])
+          var ns = global.splitNS(events[i]);
           for (var fi = 0; fi < funcs.length; fi++) {
             global.funcNS(funcs[fi], ns[1])
           }
 
-          obj.events[ns[0]] = obj.events[ns[0]] || []
+          obj.events[ns[0]] = obj.events[ns[0]] || [];
           obj.events[ns[0]][pusher].apply(obj.events[ns[0]], funcs)
         }
 
         return true
       }
     }
-  }
+  };
 
   // Adds namespace identifier to a Function object. Used when labeling event
   // listeners in DropHandle.event(). If given just one parameter reads
@@ -523,7 +524,7 @@
       func[global.nsProp] = (ns || '').toString()
       return func
     }
-  }
+  };
 
   // Extracts namespace identifier from the string. Uses jQuery notation:
   // 'event:namespace'. Both parts can be empty. If colon is omitted returns
@@ -539,7 +540,7 @@
   //? splitNS('x:y:z')  //=> ['x', 'y:z']
   global.splitNS = function (str) {
     return (str || '').match(/^([^:]*):?(.*)$/).slice(1)
-  }
+  };
 
   /***
     Global Configuration
@@ -575,7 +576,7 @@
     // Name of Function object property where event namespace is stored.
     // See funcNS(), splitNS(), DropHandle.event().
     nsProp: '_fdns'
-  })
+  });
 
   /***
     Basic Drop Handle Class
@@ -602,9 +603,9 @@
   //? new fd.DropHandle(document.body, {zoneClass: 'with-filedrop'})
   global.DropHandle = function (zone, opt) {
     // Persistent 'this' instance reference.
-    var self = this
+    var self = this;
 
-    self.el = zone = global.byID(zone)
+    self.el = zone = global.byID(zone);
     if (!zone) { throw 'Cannot locate DOM node given to new FileDrop class.' }
 
     /***
@@ -718,22 +719,22 @@
       // operation to be ignored on this drop zone (on-drop event not fired).
       // This option can be set on runtime.
       dropEffect: 'copy'
-    }
+    };
 
     // Keeping track of all DropHandle instances.
-    global.all.push(self)
+    global.all.push(self);
     // If this DropHandle was created by a FileDrop instance this property
     // will point to that instance.
-    self.filedrop = null
+    self.filedrop = null;
 
-    var iframe = self.opt.iframe
-    global.extend(self.opt, opt, true)
+    var iframe = self.opt.iframe;
+    global.extend(self.opt, opt, true);
     // In case user options contained {iframe} without full set of properties.
-    global.extend(self.opt.iframe, iframe)
+    global.extend(self.opt.iframe, iframe);
 
     // Chrome dispatches drop events document-wise rather than zone-wise.
     // If unset we won't receive any reaction on individual elements.
-    global.isChrome && (self.opt.fullDocDragDetect = true)
+    global.isChrome && (self.opt.fullDocDragDetect = true);
 
     /***
       DropHandle Events
@@ -842,11 +843,11 @@
       //      can use single handler for both XHR and <iframe> uploads - see
       //      sendViaIFrame() for details.
       iframeDone: []
-    }
+    };
 
     // Old FireDrop compatibility. Now deprecated.
-    self.on = self.events
-    self.zone = self.el
+    self.on = self.events;
+    self.zone = self.el;
 
     /***
       DropHandle Methods
@@ -864,13 +865,13 @@
       // all but Firefox and Chrome. If such we're not creating the form and
       // other supportive elements.
       if (self.opt.input != false) {
-        self.opt.input = self.opt.input || self.prepareInput(zoneNode)
+        self.opt.input = self.opt.input || self.prepareInput(zoneNode);
         self.opt.input && global.callAllOfObject(self, 'inputSetup', self.opt.input)
       }
 
-      self.hookDragOn(zoneNode)
+      self.hookDragOn(zoneNode);
       self.hookDropOn(zoneNode)
-    }
+    };
 
     // Attaches listeners for drag events - when an object is moved in or out
     // the scope of the zone element (or document for Chrome). This provides
@@ -884,25 +885,25 @@
       // when an object is being moved away or drag & drop is cancelled.
 
       if (self.opt.fullDocDragDetect) {
-        self.delegate(document.body, 'dragEnter')
+        self.delegate(document.body, 'dragEnter');
 
         global.addEvent(document, 'dragleave', function (e) {
           // Chrome (at least in earlier versions) fires dragleave randomly,
           // this is used to normalize it to just one real occurrence.
           if ((e.clientX == 0 && e.clientY == 0) || global.isTag(e.relatedTarget, 'html')) {
-            global.stopEvent(e)
+            global.stopEvent(e);
             global.callAllOfObject(self, 'dragLeave', e)
           }
         })
       } else {
-        self.delegate(zoneNode, 'dragEnter')
+        self.delegate(zoneNode, 'dragEnter');
         self.delegate(zoneNode, 'dragLeave')
       }
 
-      self.delegate(zoneNode, 'dragOver')
-      self.delegate(zoneNode, 'dragEnd')    // doesn't work anywhere; unused by FileDrop.
-      self.delegate(zoneNode, 'dragExit')   // works in Firefox; unused by FileDrop.
-    }
+      self.delegate(zoneNode, 'dragOver');
+      self.delegate(zoneNode, 'dragEnd');    // doesn't work anywhere; unused by FileDrop.
+      self.delegate(zoneNode, 'dragExit');   // works in Firefox; unused by FileDrop.
+    };
 
     // Attaches listeners to drop events. Just like hookDragOn provides
     // common browser-independent ground by normalizing occurred events
@@ -916,7 +917,7 @@
       // Firefox and Chrome-based browsers are the only ones supporting this
       // event which we use to read dropped file data in the FileDrop class.
       global.isIE9 || self.delegate(zoneNode, 'drop', 'upload')
-    }
+    };
 
     // Listens for DOM events and initiates corresponding DropHandle's events.
     // Third argument can specify DropHandle's event name if it differs from
@@ -926,10 +927,10 @@
     //? delegate(byID('myzone'), 'drop', 'upload')
     self.delegate = function (zoneNode, domEvent, selfEvent) {
       global.addEvent(zoneNode, domEvent.toLowerCase(), function (e) {
-        global.stopEvent(e)
+        global.stopEvent(e);
         global.callAllOfObject(self, selfEvent || domEvent, e)
       })
-    }
+    };
 
     // Finds or creates <input type="file"> used to facilitate non-drag & drop
     // uploads for browsers othat than Firefox and Chrome-based.
@@ -938,10 +939,10 @@
     // and no <form> as both are only reuqired for fallback <iframe> upload.
     // This result is assigned to 'input' option.
     self.prepareInput = function (parent) {
-      var file = self.findInputRecursive(parent) || self.createInputAt(parent)
+      var file = self.findInputRecursive(parent) || self.createInputAt(parent);
 
       if (file) {
-        var form = file.parentNode
+        var form = file.parentNode;
         while (form && !global.isTag(form, 'form')) {
           form = form.parentNode
         }
@@ -952,7 +953,7 @@
         // (supposedly <iframe>) really exists - we don't want to reload
         // the entire document on file upload since it defeats the purpose
         // of AJAX and is probably an error condition.
-        var target = form ? form.getAttribute('target') : ''
+        var target = form ? form.getAttribute('target') : '';
 
         if (target && global.isTag(global.byID(target), 'iframe')) {
           // Once here it means the setup is good to go. Return with success.
@@ -963,7 +964,7 @@
       // Similarly to opt.input == false this means there's input/form found
       // so turn off <iframe> upload or create our own elements.
       return false
-    }
+    };
 
     // Searches for <input type="file"> containing HTML class opt.inputClass
     // among the children of parent. Is used to autodetect pre-created input
@@ -977,7 +978,7 @@
     //? findInputRecursive(byID('foo'))   //=> null
     self.findInputRecursive = function (parent) {
       for (var i = 0; i < parent.childNodes.length; i++) {
-        var node = parent.childNodes[i]
+        var node = parent.childNodes[i];
 
         if (global.isTag(node, 'input') && node.getAttribute('type') == 'file' &&
             global.hasClass(node, self.opt.inputClass)) {
@@ -986,7 +987,7 @@
           return node
         }
       }
-    }
+    };
 
     // Creates elements necessary for <iframe> upload to work - the input,
     // form and iframe itself. A random unique ID is generated and assigned to
@@ -999,24 +1000,24 @@
     //
     // Returns the DOM element of (new) <input type="file">.
     self.createInputAt = function (parent) {
-      do { var id = global.randomID() } while (global.byID(id))
+      do { var id = global.randomID() } while (global.byID(id));
 
-      var cont = document.createElement('div')
+      var cont = document.createElement('div');
       // <iframe> code and several other things around are courtesy of
       // QQ File Uploader (https://github.com/valums/file-uploader).
       cont.innerHTML = '<iframe src="javascript:false" name="' + id + '"></iframe>' +
                        '<form method="post" enctype="multipart/form-data">' +
                          '<input type="hidden" name="' + self.opt.iframe.callbackParam + '" />' +
                          '<input type="file" name="' + self.opt.iframe.fileParam + '" />' +
-                       '</form>'
+                       '</form>';
 
       // <iframe>.
-      cont.firstChild.setAttribute('id', id)
-      cont.firstChild.style.display = 'none'
+      cont.firstChild.setAttribute('id', id);
+      cont.firstChild.style.display = 'none';
       // <form>.
-      cont.lastChild.setAttribute('target', id)
+      cont.lastChild.setAttribute('target', id);
 
-      var nextChild = parent.firstChild
+      var nextChild = parent.firstChild;
       // Opera doesn't recognize <legend> and doesn't put it on top of the fieldset
       // unless it's the first child. For this we skip over <legend> which can
       // happen if parent is a <fieldset>.
@@ -1038,7 +1039,7 @@
 
       // The file input.
       return cont.lastChild.lastChild
-    }
+    };
 
     // Can be used to abort <iframe> upload. Isn't guaranteed to work since
     // it's unreliable and highly browser-dependent (especially IE) but at
@@ -1046,10 +1047,10 @@
     // <iframe> upload (see the input option).
     self.abortIFrame = function () {
       if (self.opt.input.form) {
-        var iframe = global.byID(self.opt.input.form.getAttribute('target'))
+        var iframe = global.byID(self.opt.input.form.getAttribute('target'));
         iframe && iframe.setAttribute('src', 'javascript:false')
       }
-    }
+    };
 
     // Sends the data via <iframe> as a fallback for proper File API AJAX upload.
     // If url is omitted iframe.url option is used. See its description for more
@@ -1072,11 +1073,11 @@
     //? sendViaIFrame('http://my.host/upload.php?var=foo&var2=123')
     //? sendViaIFrame()   // uses opt.iframe.url
     self.sendViaIFrame = function (url) {
-      url = url || self.opt.iframe.url
-      var form = (self.opt.input || {}).form
+      url = url || self.opt.iframe.url;
+      var form = (self.opt.input || {}).form;
 
       if (url && form) {
-        do { var callback = global.randomID() } while (callback in window)
+        do { var callback = global.randomID() } while (callback in window);
 
         // This function is meant for calling by the code generated by the
         // server-side script to which we've sent the file via the <form>.
@@ -1111,13 +1112,13 @@
             // This URL contains full URL to which the data was sent (usually
             // opt.iframe.url) that might include 'fd-callback' parameter.
             url: url
-          })
+          });
 
           global.callAllOfObject(self, 'iframeDone', resp)
-        }
+        };
 
         // Setting the hidden input with the callback name to our newly generated name.
-        var cbInput = form.firstChild
+        var cbInput = form.firstChild;
         while (cbInput && (!global.isTag(cbInput, 'input') ||
                cbInput.name != self.opt.iframe.callbackParam)) {
           cbInput = cbInput.nextSibling
@@ -1133,33 +1134,33 @@
                 self.opt.iframe.callbackParam + '=' + callback
         }
 
-        form.setAttribute('action', url)
-        global.callAllOfObject(self, 'iframeSetup', form)
-        form.submit()
-        setTimeout(self.resetForm, 300)
+        form.setAttribute('action', url);
+        global.callAllOfObject(self, 'iframeSetup', form);
+        form.submit();
+        setTimeout(self.resetForm, 300);
 
         return true
       }
-    }
+    };
 
     // Clears value of the file input so that the same file (with the same
     // local path) can be uploaded again without reloading the page.
     // Thanks to @rafaelmaiolla for the tips.
     self.resetForm = function () {
-      var input = self.opt.input && self.opt.input.file
+      var input = self.opt.input && self.opt.input.file;
       if (input) {
         // Works in Firefox/Chrome only. Funny fact is that cloneNode() there
         // will clone file selection too. IE doesn't support value = '' but
         // node cloning erases it.
-        input.value = ''
+        input.value = '';
 
         if (self.opt.recreateInput) {
-          var clone = self.opt.input.file = input.cloneNode(true)
-          input.parentNode.replaceChild(clone, input)
+          var clone = self.opt.input.file = input.cloneNode(true);
+          input.parentNode.replaceChild(clone, input);
           global.callAllOfObject(self, 'inputSetup', [self.opt.input, input])
         }
       }
-    }
+    };
 
     // Toggles selection of multiple files in the browser's open file dialog
     // that appears when you click on <input type="file">. Does nothing if
@@ -1182,7 +1183,7 @@
       }
 
       return self.opt.input && !!self.opt.input.file.getAttribute('multiple')
-    }
+    };
 
     // Function to manipulate events that correspond to DropHandle's events - not
     // DOM node events. If you need to listen to them instead then use this:
@@ -1274,7 +1275,7 @@
     //? event('any:namespace', ...)
     self.event = function (events, funcs) {
       return global.appendEventsToObject.apply(self, arguments)
-    }
+    };
 
     // A simplified companion of event() that adds listeners not after
     // existing but in front of them. Useful for intercepting and overriding
@@ -1291,7 +1292,7 @@
     //? preview('any:myns', function () { alert('Stop that!'); return false })
     self.preview = function (events, funcs) {
       return global.previewToObject.apply(self, arguments)
-    }
+    };
 
     /***
       Standard DropHandle Event Callbacks
@@ -1306,13 +1307,13 @@
         // IE clones elements "by reference" so when one's attributes or
         // events are changed the other also reflects the change.
         // Taken from jQuery which borrowed that from MooTools.
-        input.file.clearAttributes && input.file.clearAttributes()
+        input.file.clearAttributes && input.file.clearAttributes();
         input.file.mergeAttributes && input.file.mergeAttributes(oldInput)
       } else {
         self.multiple(self.opt.multiple)
       }
 
-      global.setClass(input.file, self.opt.inputClass)
+      global.setClass(input.file, self.opt.inputClass);
 
       // We listen for <input type="file">'s onchange event - when it occurs
       // we trigger submission of the hidden form which navigates hidden
@@ -1320,9 +1321,9 @@
       // This can be used in drag & drop-aware browsers (Firefox and Chrome-based)
       // to create a "Browse for file" button as an alternative to drag & drop.
       // For more details see the 'iframe' option.
-      self.delegate(input.file, 'change', 'upload')
+      self.delegate(input.file, 'change', 'upload');
 
-      var parent = input.file.parentNode
+      var parent = input.file.parentNode;
       if (parent && parent.style.display.match(/^(static)?$/)) {
         // We need to anchor <input>'s position relative to its parent node.
         parent.style.position = 'relative'
@@ -1331,18 +1332,18 @@
       if (global.isTag(zone, 'fieldset')) {
         // Firefox 13 or so has started to ignore overflow: hidden on fieldsets.
         // We need to wrap it in a <div> that by itself will hide any overflow.
-        var div = document.createElement('div')
-        div.style.position = 'relative'
-        div.style.overflow = 'hidden'
-        zone.parentNode.insertBefore(div, zone)
+        var div = document.createElement('div');
+        div.style.position = 'relative';
+        div.style.overflow = 'hidden';
+        zone.parentNode.insertBefore(div, zone);
         div.appendChild(zone)
       }
-    }
+    };
 
     self.onDragOver = function (e) {
-      global.stopEvent(e)
+      global.stopEvent(e);
       e.dataTransfer && (e.dataTransfer.dropEffect = self.opt.dropEffect)
-    }
+    };
 
     self.onUpload = function () {
       for (var i = 0; i < global.all.length; i++) {
@@ -1350,18 +1351,18 @@
           global.callAllOfObject(global.all[i], 'uploadElsewhere', self)
         }
       }
-    }
+    };
 
     self.event({
       inputSetup: self.onInputSetup,
       dragOver: self.onDragOver,
       upload: self.onUpload
-    })
+    });
 
     // Initialization.
-    global.setClass(zone, self.opt.zoneClass)
+    global.setClass(zone, self.opt.zoneClass);
     self.hook(zone)
-  }
+  };
 
   /***
     Main FileDrop Class
@@ -1384,15 +1385,15 @@
   //? new FileDrop(document.body, {zoneClass: 'with-filedrop'})
   global.FileDrop = function (zone, opt) {
     // Persistent 'this' instance reference.
-    var self = this
+    var self = this;
 
-    zone = global.byID(zone)
+    zone = global.byID(zone);
 
     // Underlying DropHandle instance providing browser-independent
     // handlers for drag & drop and <iframe> upload facility.
     // Constructor will throw an exception if zone is invalid/undefined.
-    self.handle = new global.DropHandle(zone, opt)
-    self.handle.filedrop = self
+    self.handle = new global.DropHandle(zone, opt);
+    self.handle.filedrop = self;
 
     /***
       FileDrop Options
@@ -1410,14 +1411,14 @@
       // (Chrome-powered browsers). It's removed once the object was dragged
       // away or drag & drop was cancelled.
       dragOverClass: 'over'
-    })
+    });
 
     global.extend(self.handle.opt.iframe, {
       // opt.iframe.force - if set FileDrop will always upload files by using
       // fallback <iframe> method. This only makes sense in debugging and
       // for some browsers (Opera before migrating to Chrome engine).
       force: false
-    })
+    });
 
     /***
       FileDrop Events
@@ -1467,12 +1468,12 @@
       // function (fd.File)
       //    - is passed instance of the newly created File object.
       fileSetup: []
-    })
+    });
 
     // Handles upload that happens when a user drops a file onto the zone
     // (Firefox, Chrome-based) or its <input type="file" (Opera, others).
     self.onUpload = function (e) {
-      var files = !self.opt.iframe.force && self.eventFiles(e, true)
+      var files = !self.opt.iframe.force && self.eventFiles(e, true);
 
       // This was likely triggered by onchange event of <input type="file">
       // which means the browser doesn't support drag & drop or the user
@@ -1492,40 +1493,41 @@
         // Chrome-based) so fire off the usual on-drop event.
         global.callAllOfObject(self, 'send', [files])
       }
-    }
+    };
 
     // Retrieves fd.File objects from an on-drop event. Returns a fd.FileList
     // array-like object (not W3C FileList).
     // If orFalse is unset always returns a FileList even if event was invalid,
     // otherwise returns false in such occurrences instead of empty FileList.
     self.eventFiles = function (e, orFalse) {
-      var result = new global.FileList(e)
+      var result = new global.FileList(e);
+      var list = undefined;
 
       // IE 8 supplies dataTransfer but it's of its own format (getData(), etc.)
       // and not standardized. Has no file objects.
       if (e.dataTransfer && (e.dataTransfer.length || e.dataTransfer.files)) {
-        var list = e.dataTransfer
+        list = e.dataTransfer
       } else {
         // IE 10 provides dataTransfer on drag & drop but when selecting with
         // Open File dialog of <input type="file"> it only has e.srcElement.files.
         // Thanks to @rafaelmaiolla for this correction.
-        var list = (e.target && e.target.files) || (e.srcElement && e.srcElement.files)
+        list = (e.target && e.target.files) || (e.srcElement && e.srcElement.files)
       }
 
       if (list) {
-        var entries = list.items || []
-        list.files && (list = list.files)   // Firefox 3.6.
-        var names = {}
+        var entries = list.items || [];
+        list.files && (list = list.files);   // Firefox 3.6.
+        var names = {};
 
         for (var i = 0; i < list.length; i++) {
-          var file = new global.File(list[i])
+          var file = new global.File(list[i]);
 
           // Safari Windows adds first file several times so skip them.
           // ...while iOS Safari adds files under the same name - image.jpg (#30).
           if (!names[file.name] || file.name == 'image.jpg') {
-            names[file.name] = true
-            file.setNativeEntry(entries[i])
-            global.callAllOfObject(self, 'fileSetup', file)
+            names[file.name] = true;
+            file.setNativeEntry(entries[i]);
+            global.callAllOfObject(self, 'fileSetup', file);
 
             // Directories have zero size but in Chrome they are useful
             // since you can access underlying DIrectoryEntry and read files.
@@ -1539,13 +1541,13 @@
       }
 
       return result
-    }
+    };
 
     // Linking both classes together. Objects become references so changing,
     // for example, handle.events affects this.events. Functions of DropHandle
     // become available on this FileDrop instance which is fine since they
     // operate on 'self' bound to DropHandle object rather than 'this' of FileDrop.
-    global.extend(self, self.handle)
+    global.extend(self, self.handle);
 
     /***
       Standard FileDrop Event Callbacks
@@ -1568,7 +1570,7 @@
       dragEnter:        dragClassChanger(true),
       dragLeave:        dragClassChanger(false),
       uploadElsewhere:  dragClassChanger(false)
-    })
+    });
 
     self.preview({
       // Placing handler to reset on-drop state of the zone for better
@@ -1576,7 +1578,7 @@
       // more dragged even if actual upload handler takes some time to execute.
       upload:           dragClassChanger(false)
     })
-  }
+  };
 
   /***
     FileList Class
@@ -1589,80 +1591,81 @@
 
   global.FileList = function (event) {
     // Persistent 'this' instance reference.
-    var self = this
+    var self = this;
 
     // If set can be 'copy', 'move' or other action. Doesn't reliably work
     // cross-browser and cross-platform. See MDN for more info:
     // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer
-    self.dropEffect = (event && event.dropEffect) || ''
-    self.length = 0
+    self.dropEffect = (event && event.dropEffect) || '';
+    self.length = 0;
 
     // No need to hold the reference to this variable.
-    event = null
+    event = null;
 
     self.push = function (file) {
-      self[self.length++] = file
-      return self
-    }
+      self[self.length++] = file;
+      return self;
+    };
 
     // Returns undefind if this list is empty.
     self.pop = function () {
       if (self.length > 0) {
-        var file = self.last()
-        delete self[--self.length]
-        return file
+        var file = self.last();
+        delete self[--self.length];
+        return file;
       }
-    }
+    };
 
     self.first = function () {
-      return self[0]
-    }
+      return self[0];
+    };
 
     self.last = function () {
-      return self[self.length - 1]
-    }
+      return self[self.length - 1];
+    };
 
     self.remove = function (i) {
       for (; i < self.length - 1; i++) {
-        self[i] = self[i + 1]
+        self[i] = self[i + 1];
       }
 
-      se.f.pop()
-      return self
-    }
+      self.pop();
+      return self;
+    };
 
     self.clear = function () {
       for (var i = 0; i < self.length; i++) {
         delete self[i]
       }
 
-      self.length = 0
-      return self
-    }
+      self.length = 0;
+      return self;
+    };
 
     // Reverses order of files in this list (changes self).
     self.reverse = function () {
       for (var i = 0; i < Math.floor(self.length / 2); i++) {
-        self[i] = self[self.length - i - 1]
+        self[i] = self[self.length - i - 1];
       }
-      return self
-    }
+      return self;
+    };
 
     // Creates copy of this list and adds items from FileList or array
     // to the end of the returned copy.
     self.concat = function (list) {
-      var copy = new global.FileList
-      for (var i = 0; i < self.length; i++) {
-        copy[i] = self[i]
+      var copy = new global.FileList;
+      var i;
+      for (i = 0; i < self.length; i++) {
+        copy[i] = self[i];
       }
 
-      for (var i = 0; list && i < list.length; i++) {
-        copy[self.length + i + 1] = list[i]
+      for (i = 0; list && i < list.length; i++) {
+        copy[self.length + i + 1] = list[i];
       }
 
-      copy.length = self.length + (list || []).length
-      return self
-    }
+      copy.length = self.length + (list || []).length;
+      return self;
+    };
 
     // Sorts this list by calling comparator in context cx (or 'this' FileList).
     // func = function (File a, File b, aIndex, bIndex) - if returns < 0 second
@@ -1673,15 +1676,15 @@
       for (var i = 0; i < self.length; i++) {
         for (var j = 0; j < self.length; j++) {
           if (func.call(cx || this, self[i], self[j], i, j) < 0) {
-            var temp = self[i]
-            self[i] = self[j]
-            self[j] = temp
+            var temp = self[i];
+            self[i] = self[j];
+            self[j] = temp;
           }
         }
       }
 
-      return self
-    }
+      return self;
+    };
 
     // Sorts this list by calling func on each File alone and using that value
     // (hash) to compare itsems between themselves. Like Underscore's sortBy().
@@ -1691,22 +1694,23 @@
     //? sortBy(function (file) { return file.modDate })
     //? sortBy(function () { return Math.random() })
     self.sortBy = function (func, cx) {
-      var list = []
+      var list = [];
+      var i;
 
-      for (var i = 0; i < self.length; i++) {
+      for (i = 0; i < self.length; i++) {
         list.push([ i, func.call(cx || this, self[i], i) ])
       }
 
       list.sort(function (a, b) {
         return a[1] > b[1] ? +1 : (a[1] < b[1] ? -1 : 0)
-      })
+      });
 
-      for (var i = 0; i < list.length; i++) {
+      for (i = 0; i < list.length; i++) {
         self[i] = list[i][0]
       }
 
       return self
-    }
+    };
 
     // Calls func in context cx for every File in the list and if it returns
     // a non-null value returns the File object on which func was invoked.
@@ -1717,27 +1721,27 @@
     //    // returns first File which local name starts with 'a', if any.
     self.find = function (func, cx) {
       for (var i = 0; i < self.length; i++) {
-        var res = func.call(cx || this, self[i], i)
-        if (res != null) { return self[i] }
+        var res = func.call(cx || this, self[i], i);
+        if (res != null) { return self[i]; }
       }
-    }
+    };
 
     // The same as find() but ignores returned value of the callback invoking
     // it for every File in the list.
     //
     //? each(function (f) { alert(f.name) })
     self.each = function (func, cx) {
-      self.find(function () { func.apply(this, arguments) }, cx)
-      return self
-    }
+      self.find(function () { func.apply(this, arguments) }, cx);
+      return self;
+    };
 
     // Calls method on every contained object with given arguments. Returns self.
     //
     //? invoke('fileMethod', 'arg1', 2, 3.33)
     self.invoke = function (method, arg_1) {
-      var args = global.toArray(arguments, 1)
-      return this.each(function (file) { file[method].apply(file, args) })
-    }
+      var args = global.toArray(arguments, 1);
+      return this.each(function (file) { file[method].apply(file, args) });
+    };
 
     // Aborts all uploads of files contained in this list. Does nothing if
     // upload isn't active. Doesn't abort <iframe> uploads - for this call
@@ -1746,7 +1750,7 @@
     //? abort()
     self.abort = function () {
       return this.invoke('abort')
-    }
+    };
 
     // Runs through over all items in this list calling func in context cx (or
     // this) and storing returned values. Returns File object for which func
@@ -1756,48 +1760,48 @@
     //? findCompare(function (f) { return f.size })
     //    // returns largest file.
     self.findCompare = function (func, cx) {
-      var file, value = null, res
+      var file, value = null, res;
 
       self.each(function (f) {
         if (value == null || value < (res = func.call(cx, file))) {
-          file = f
+          file = f;
         }
-      }, cx)
+      }, cx);
 
-      return file
-    }
+      return file;
+    };
 
     // Returns new list that only contains items for which func called in context
     // cx (or this) has returned a truthy value.
     self.filter = function (func, cx) {
-      var list = new global.FileList
+      var list = new global.FileList;
 
       self.each(function (f) {
-        func.apply(this, arguments) && list.push(f)
-      }, cx)
+        func.apply(this, arguments) && list.push(f);
+      }, cx);
 
-      return list
-    }
+      return list;
+    };
 
     // Finds File with biggest size or undefined for empty list.
     self.largest = function () {
-      return self.findCompare(function (f) { return f.size })
-    }
+      return self.findCompare(function (f) { return f.size });
+    };
 
     // Finds File with smallest size or undefined for empty list.
     self.smallest = function () {
-      return self.findCompare(function (f) { return -f.size })
-    }
+      return self.findCompare(function (f) { return -f.size });
+    };
 
     // Finds File that was changed the longest time before or undefined for empty list.
     self.oldest = function () {
-      return self.findCompare(function (f) { return -f.modDate.getTime() })
-    }
+      return self.findCompare(function (f) { return -f.modDate.getTime() });
+    };
 
     // Finds File that was most recently changed or undefined for empty list.
     self.newest = function () {
-      return self.findCompare(function (f) { return f.modDate })
-    }
+      return self.findCompare(function (f) { return f.modDate });
+    };
 
     // Returns new list of all files which MIME type matches. MIME shouldn't contain
     // RegExp symbols except for '/'. To match MIME group like 'image/*' don't
@@ -1805,15 +1809,15 @@
     //
     //? ofType('image').first()   //=> File or undefined if none
     self.ofType = function (mime) {
-      mime += mime.indexOf('/') == -1 ? '/' : '$'
-      mime = new RegExp('^' + mime, 'i')
-      return self.filter(function (f) { return mime.test(f.type) })
-    }
+      mime += mime.indexOf('/') == -1 ? '/' : '$';
+      mime = new RegExp('^' + mime, 'i');
+      return self.filter(function (f) { return mime.test(f.type); });
+    };
 
     // Returns new list with File items with image/* MIME type.
     self.images = function () {
       return self.ofType('image')
-    }
+    };
 
     // If name is string returns File with name exactly matching that string
     // If name is RegExp returns new list containing File items which 'name'
@@ -1823,16 +1827,16 @@
     //? named(/^start_\..+$/i)  //=> FileList (copy)
     self.named = function (name) {
       if (typeof name == 'string') {
-        return self.find(function (f) { return f.name == name })
+        return self.find(function (f) { return f.name == name });
       } else {
-        return self.filter(function (f) { return name.test(f.name) })
+        return self.filter(function (f) { return name.test(f.name) });
       }
     }
-  }
+  };
 
   // Making FileList array-like.
-  global.FileList.prototype.length = 0
-  global.FileList.prototype.splice = Array.prototype.splice
+  global.FileList.prototype.length = 0;
+  global.FileList.prototype.splice = Array.prototype.splice;
 
   /***
     Browser-Independent File Class
@@ -1848,31 +1852,31 @@
   //          event object. Can be accessed via this.nativeFile property.
   global.File = function (file) {
     // Persistent 'this' instance reference.
-    var self = this
+    var self = this;
 
     // Native browser's File object as it was given in the on-drop event.
     // Is null for directory entries if on lists produced by listEntries().
-    self.nativeFile = file
+    self.nativeFile = file;
 
     // In Chrome 21+ will be set to native Entry (FileEntry, DirectoryEntry, etc.)
     // instance. See W3C spec: http://www.w3.org/TR/file-system-api/#the-entry-interface
-    self.nativeEntry = null
+    self.nativeEntry = null;
 
     // Local file name.
-    self.name = file.fileName || file.name || ''
+    self.name = file.fileName || file.name || '';
 
     // Local file size (bytes).
-    self.size = file.fileSize || file.size || 0
+    self.size = file.fileSize || file.size || 0;
 
     // Local file MIME type.
-    self.type = self.mime = file.fileType || file.type || ''
+    self.type = self.mime = file.fileType || file.type || '';
 
     // Last modification of the local time. Standard Date object.
-    self.modDate = file.lastModifiedDate || new Date
+    self.modDate = file.lastModifiedDate || new Date;
 
     // XMLHttpRequest object that was used to upload the file to the server.
     // Only filled after sendTo() was called.
-    self.xhr = null
+    self.xhr = null;
 
     /***
       File Options
@@ -1899,7 +1903,7 @@
       // WebDAV services which might accept PUT or DELETE. Given in sendTo()
       // to XMLHttpRequest.open().
       method: 'POST'
-    }
+    };
 
     /***
       File Events
@@ -1966,10 +1970,10 @@
       //      If XHR object is not passed this marks an error that has occurred
       //      while reading file from local file system with readAsArrayBuffer().
       error: []
-    }
+    };
 
     // Old FireDrop compatibility. Now deprecated.
-    self.events.sendXHR = self.events.xhrSend
+    self.events.sendXHR = self.events.xhrSend;
 
     /***
       File Methods
@@ -1979,9 +1983,9 @@
     //
     //? file.abort()
     self.abort = function () {
-      self.xhr && self.xhr.abort && self.xhr.abort()
-      return self
-    }
+      self.xhr && self.xhr.abort && self.xhr.abort();
+      return self;
+    };
 
     // Submits the dropped file to the server script at given URL and with
     // optional options (fields default to this fd.File.opt).
@@ -1992,98 +1996,99 @@
     //? sendTo('http://my.host/upload.php?var=foo&var2=123')
     //? sendTo('upload.php', {method: 'PUT'})
     self.sendTo = function (url, opt) {
-      opt = global.extend(opt, self.opt)
-      opt.url = url
+      opt = global.extend(opt, self.opt);
+      opt.url = url;
 
       if (!self.size) {
         // Zero size also indicates that it might be a directory.
         global.hasConsole && console.warn('Trying to send an empty FileDrop.File.')
       } else if (window.FileReader) {
         // Using Firefox FileAPI.
-        var reader = new FileReader
+        var reader = new FileReader;
 
-        reader.onload = function (e) { self.sendDataReadyTo(opt, e) }
-        reader.onerror = function (e) { global.callAllOfObject(self, 'error', [e]) }
+        reader.onload = function (e) { self.sendDataReadyTo(opt, e) };
+        reader.onerror = function (e) { global.callAllOfObject(self, 'error', [e]) };
 
-        reader.readAsArrayBuffer(self.nativeFile)
+        reader.readAsArrayBuffer(self.nativeFile);
       } else {
         // Using early Chrome/Safari File API.
-        self.sendDataReadyTo(opt)
+        self.sendDataReadyTo(opt);
       }
 
-      return self
-    }
+      return self;
+    };
 
     // Internal method that's called when file data was read and is ready for
     // upload. For FileAPI (Firefox) gets called on readAsArrayBuffer() onload
     // event; for Safari/early Chrome it's called immediately and gets passed
     // the native file object itself.
     self.sendDataReadyTo = function (opt, e) {
-      self.abort()
+      self.abort();
 
-      self.xhr = global.newXHR()
-      self.hookXHR(self.xhr)
+      self.xhr = global.newXHR();
+      self.hookXHR(self.xhr);
 
-      self.xhr.open(opt.method, opt.url, true)
+      self.xhr.open(opt.method, opt.url, true);
       // Missing in IE.
-      self.xhr.overrideMimeType && self.xhr.overrideMimeType('application/octet-stream')
-      self.xhr.setRequestHeader('Content-Type', 'application/octet-stream')
-      
+      self.xhr.overrideMimeType && self.xhr.overrideMimeType('application/octet-stream');
+      self.xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+
       if (global.isArray(opt.customHeaders)) {
         for (var i = 0; i < opt.customHeaders.length; i++) {
-      	  self.xhr.setRequestHeader(opt.customHeaders[i].name, opt.customHeaders[i].value)
+      	  self.xhr.setRequestHeader(opt.customHeaders[i].name, opt.customHeaders[i].value);
         }
       }
 
       if (opt.extraHeaders) {
-        self.xhr.setRequestHeader('X-File-Name', encodeURIComponent(self.name))
-        self.xhr.setRequestHeader('X-File-Size', self.size)
-        self.xhr.setRequestHeader('X-File-Type', self.type)
-        self.xhr.setRequestHeader('X-File-Date', self.modDate.toGMTString())
+        self.xhr.setRequestHeader('X-File-Name', encodeURIComponent(self.name));
+        self.xhr.setRequestHeader('X-File-Size', self.size);
+        self.xhr.setRequestHeader('X-File-Type', self.type);
+        self.xhr.setRequestHeader('X-File-Date', self.modDate.toGMTString());
 
-        var reqWith = opt.xRequestedWith
+        var reqWith = opt.xRequestedWith;
         if (reqWith === true) {
-          var api = window.FileReader ? 'FileAPI' : 'Webkit'
-          reqWith = 'FileDrop-XHR-' + api
+          var api = window.FileReader ? 'FileAPI' : 'Webkit';
+          reqWith = 'FileDrop-XHR-' + api;
         }
 
         reqWith && self.xhr.setRequestHeader('X-Requested-With', reqWith)
       }
 
-      global.callAllOfObject(self, 'xhrSetup', [self.xhr, opt])
+      global.callAllOfObject(self, 'xhrSetup', [self.xhr, opt]);
 
       // Some browsers allow reading raw data, some don't. See if ours allows
       // and if not then it should support just passing the native file object
       // to XMLHttpRequest.send().
-      var data = (e && e.target && e.target.result) ? e.target.result : self.nativeFile
-      global.callAllOfObject(self, 'xhrSend', [self.xhr, data, opt])
+      var data = (e && e.target && e.target.result) ? e.target.result : self.nativeFile;
+      global.callAllOfObject(self, 'xhrSend', [self.xhr, data, opt]);
       return self.xhr
-    }
+    };
 
     // Attaches internal event listeners to the XMLHttpRequest object that is
     // used to upload the dropped file. Not all browsers trigger upload events
     // on the XHR object itself (hence evtHost).
     self.hookXHR = function (xhr) {
-      var evtHost = xhr.upload || xhr
+      var evtHost = xhr.upload || xhr;
 
       xhr.onreadystatechange = function (e) {
+        var event;
         if (xhr.readyState == 4) {
           try {
-            var event = xhr.status == 200 ? 'done' : 'error'
+            event = xhr.status == 200 ? 'done' : 'error'
           } catch (e) {
-            var event = 'error'
+            event = 'error'
           }
 
-          var args = event == 'error' ? [e, xhr] : [xhr, e]
-          global.callAllOfObject(self, event, args)
+          var args = event == 'error' ? [e, xhr] : [xhr, e];
+          global.callAllOfObject(self, event, args);
         }
-      }
+      };
 
       evtHost.onprogress = function (e) {
-        var current = e.lengthComputable ? e.loaded : null
+        var current = e.lengthComputable ? e.loaded : null;
         global.callAllOfObject(self, 'progress', [current, e.total || null, xhr, e])
       }
-    }
+    };
 
     // Browser-independent way of reading binary data. Doesn't work on all browsers.
     // Asynchronous. If onError is omitted then onDone is called with the usual
@@ -2146,8 +2151,8 @@
     //? readData(function (str) { alert(str), false, 'readAsText')
     //      // identical to above.
     self.readData = function (onDone, onError, func) {
-      return self.read({onDone: onDone, onError: onError, func: func})
-    }
+      return self.read({onDone: onDone, onError: onError, func: func});
+    };
 
     // Alias to readData() that reads Data URI suitable for <img src> attribute.
     // Unlike readData() if onError isn't passed explicitly it's set to false
@@ -2160,8 +2165,8 @@
     //    document.body.appendChild(img)
     //  })
     self.readDataURL = function (onDone, onError) {
-      return self.readData(onDone, onError || false, 'uri')
-    }
+      return self.readData(onDone, onError || false, 'uri');
+    };
 
     // Alias to readDataURL().
     self.readDataURI = self.readDataURL;
@@ -2174,11 +2179,11 @@
     //    // reads first 4 bytes of the file, treats them as UTF-8 and shows them.
     self.read = function (opt) {
       function error(reason, e) {
-        typeof e == 'object' || (e.message = e)
-        e.fdError = reason
+        typeof e == 'object' || (e.message = e);
+        e.fdError = reason;
 
         if (opt.onError !== false) {
-          (opt.onError || opt.onDone).apply(this, arguments)
+          (opt.onError || opt.onDone).apply(this, arguments);
         }
       }
 
@@ -2206,7 +2211,7 @@
 
         // contentType assigned to new Blob (empty leaves default).
         mime: ''
-      })
+      });
 
       if (!window.FileReader) {
         return error('support', e)
@@ -2214,56 +2219,56 @@
 
       if (opt.start > 0 || opt.end != null && opt.end) {
         if (opt.blob.slice) {
-          opt.end == null && (opt.end = opt.blob.size || opt.blob.fileSize)
+          opt.end == null && (opt.end = opt.blob.size || opt.blob.fileSize);
           opt.blob = opt.blob.slice(opt.start, opt.end, opt.mime)
         } else if (global.hasConsole) {
-          console.warn('File Blob/slice() are unsupported - operating on entire File.')
+          console.warn('File Blob/slice() are unsupported - operating on entire File.');
         }
       }
 
-      var reader = new FileReader
-      reader.onerror = function (e) { error('read', e) }
+      var reader = new FileReader;
+      reader.onerror = function (e) { error('read', e) };
 
       reader.onload = function (e) {
         if (e.target && e.target.result) {
           if (opt.func == 'readAsBinaryString') {
             // Function actually used was readAsArrayBuffer() - see the note below.
-            e.target.result = String.fromCharCode.apply(null, new Uint8Array(e.target.result))
+            e.target.result = String.fromCharCode.apply(null, new Uint8Array(e.target.result));
           }
 
-          opt.onDone(e.target.result)
+          opt.onDone(e.target.result);
         } else {
-          reader.onerror(e)
+          reader.onerror(e);
         }
-      }
+      };
 
-      var func = opt.func
+      var func = opt.func;
 
       if (global.isArray(func)) {
-        var name = func[0]
-        func[0] = opt.blob
-        return reader[name].apply(reader, func)
+        var name = func[0];
+        func[0] = opt.blob;
+        return reader[name].apply(reader, func);
       } else {
         if (!func || func == 'bin') {
-          func = 'readAsBinaryString'
+          func = 'readAsBinaryString';
         } else if (func == 'url' || func == 'uri' || func == 'src') {
-          func = 'readAsDataURL'
+          func = 'readAsDataURL';
         } else if (func == 'array') {
-          func = 'readAsArrayBuffer'
+          func = 'readAsArrayBuffer';
         } else if (func == 'text') {
-          func = 'readAsText'   // reads as UTF-8 by default.
+          func = 'readAsText';   // reads as UTF-8 by default.
         } else if (func.substr(0, 4) != 'read') {
-          return reader.readAsText(opt.blob, func)
+          return reader.readAsText(opt.blob, func);
         }
 
         // readAsBinaryString() has been deprecated since mid-2012 in favour
         // of readAsArrayBuffer(). Additionally, IE 10 only supports the latter.
         // Result that's been read will be converted to string in onload.
-        func == 'readAsBinaryString' && (func = 'readAsArrayBuffer')
+        func == 'readAsBinaryString' && (func = 'readAsArrayBuffer');
 
-        return reader[func](opt.blob)
+        return reader[func](opt.blob);
       }
-    }
+    };
 
     // Uses W3C draft File System API to traverse this DirectoryEntry.
     // Currently supported in Chrome 21+. Spec: http://www.w3.org/TR/file-system-api/
@@ -2292,40 +2297,40 @@
     //              function (e) { alert('File System API error ' + e.code) })
     self.listEntries = function (onDone, onError) {
       if (self.nativeEntry && self.nativeEntry.isDirectory) {
-        onError = onError || new Function
-        var reader = self.nativeEntry.createReader()
-        var files = new global.FileList
-        var enqueued = 0
+        onError = onError || new Function;
+        var reader = self.nativeEntry.createReader();
+        var files = new global.FileList;
+        var enqueued = 0;
 
         function dequeue(count) {
-          enqueued -= count
+          enqueued -= count;
           if (enqueued == 0 && onDone) {
-            onDone(files)
-            onDone = null
+            onDone(files);
+            onDone = null;
           }
         }
 
         reader.readEntries(function (list) {
           for (var i = 0; i < list.length; i++) {
-            var nativeEntry = list[i]
+            var nativeEntry = list[i];
 
             if (nativeEntry.file) {
               // This entry is a file (FileEntry).
-              enqueued++
+              enqueued++;
               nativeEntry.file(
                 function (nativeFile) {
-                  var file = new global.File(nativeFile)
-                  file.setNativeEntry(nativeEntry)
-                  files.push(file)
-                  dequeue(1)
+                  var file = new global.File(nativeFile);
+                  file.setNativeEntry(nativeEntry);
+                  files.push(file);
+                  dequeue(1);
                 },
                 function () {
                   // Error getting a File object. Let's still insert it
                   // into the resulting list but without nativeFile (which
                   // makes sendTo(), readData(), etc. unavailable).
-                  files.push( global.File.fromEntry(nativeEntry) )
-                  dequeue(1)
-                  onError.apply(this, arguments)
+                  files.push( global.File.fromEntry(nativeEntry) );
+                  dequeue(1);
+                  onError.apply(this, arguments);
                 }
               )
             } else {
@@ -2333,34 +2338,34 @@
               // from File API spec: http://dev.w3.org/2006/webapi/FileAPI/).
               // Don't try calling sendTo(), readFile() and the likes on the
               // FileDrop.File items returned in the FileList passed to onDone.
-              files.push( global.File.fromEntry(nativeEntry) )
+              files.push( global.File.fromEntry(nativeEntry) );
             }
           }
 
           i ? reader.readEntries(arguments.callee, onError) : dequeue(0)
-        }, onError)
+        }, onError);
 
         return true
       }
-    }
+    };
 
     // Internal method to assign data from a native Entry object.
     self.setNativeEntry = function (item) {
-      self.nativeEntry = item && item.webkitGetAsEntry && item.webkitGetAsEntry()
-    }
+      self.nativeEntry = item && item.webkitGetAsEntry && item.webkitGetAsEntry();
+    };
 
     // Adds event listeners to this object. See DropHandle.event() for
     // extended comment and examples.
     self.event = function (events, funcs) {
-      return global.appendEventsToObject.apply(self, arguments)
-    }
+      return global.appendEventsToObject.apply(self, arguments);
+    };
 
     // Adds event listeners to this object in front of existing handlers.
     // Can be used to intercept/override certain events. See DropHandle.event()
     // for extended comment and examples.
     self.preview = function (events, funcs) {
-      return global.previewToObject.apply(self, arguments)
-    }
+      return global.previewToObject.apply(self, arguments);
+    };
 
     /***
       Standard File Event Callbacks
@@ -2372,13 +2377,13 @@
     // (Safari). Either way, send() handles both. This used to deal with
     // sendAsBinary() but it's specific to Firefox 3.6 and is removed now.
     self.onXhrSend = function (xhr, data) {
-      xhr.send(data)
-    }
+      xhr.send(data);
+    };
 
     self.event({
       xhrSend:        self.onXhrSend
     })
-  }
+  };
 
   // Static method of File that creates an object without attaching to any
   // File API's File object. It's only useful if you have an Entry object
@@ -2389,11 +2394,11 @@
   //? fromEntry( e.dataTransfer.items[0].webkitGetAsEntry() )
   //      //=> FileDrop.File
   global.File.fromEntry = function (nativeEntry) {
-    var file = new global.File(nativeEntry)
-    file.setNativeEntry(nativeEntry)
-    file.nativeFile = null
-    return file
-  }
+    var file = new global.File(nativeEntry);
+    file.setNativeEntry(nativeEntry);
+    file.nativeFile = null;
+    return file;
+  };
 
   /***
     FileDrop jQuery Interface
@@ -2470,19 +2475,19 @@
    ***/
 
   global.jQuery = function ($) {
-    $ = $ || jQuery || window.jQuery
+    $ = $ || jQuery || window.jQuery;
     if (!$) { throw 'No window.jQuery object to integrate FileDrop into.' }
 
     $.fn.filedrop = function (options) {
       function delegate(prefix, firstArgs) {
         return function (event) {
-          var args = (firstArgs || []).concat(global.toArray(arguments, 1))
-          return $node.triggerHandler((prefix + event).toLowerCase(), args)
+          var args = (firstArgs || []).concat(global.toArray(arguments, 1));
+          return $node.triggerHandler((prefix + event).toLowerCase(), args);
         }
       }
 
-      var $node = this
-      var host = this.data('filedrop')
+      var $node = this;
+      var host = this.data('filedrop');
 
       if (typeof options == 'string') {
         if (!host) {
@@ -2490,37 +2495,37 @@
         } else if (typeof host[options] == 'undefined') {
           $.error("There's no method or property FileDrop." + options + ".")
         } else {
-          var value = host[options]
+          var value = host[options];
           if (typeof value == 'function') {
-            return value.apply(host, global.toArray(arguments, 1))
+            return value.apply(host, global.toArray(arguments, 1));
           } else {
-            return value
+            return value;
           }
         }
       } else if (!options || typeof options == 'object') {
         if (!host) {
-          var zone = new FileDrop(this[0], options)
-          zone.$el = $(this)
-          this.first().data('filedrop', zone)
+          var zone = new FileDrop(this[0], options);
+          zone.$el = $(this);
+          this.first().data('filedrop', zone);
 
-          zone.event('any', delegate('fd'))
+          zone.event('any', delegate('fd'));
 
           zone.on.fileSetup.push(function (file) {
             file.event('any', delegate('file', [file]))
           })
         } else if (!options) {
-          return host
+          return host;
         } else {
-          global.extend(host.opt, options, true)
+          global.extend(host.opt, options, true);
         }
       } else {
         $.error('Invalid $.filedrop() parameter - expected nothing (creates new zone),' +
-                ' a string (property to access) or an object (custom zone options).')
+                ' a string (property to access) or an object (custom zone options).');
       }
 
-      return $node
+      return $node;
     }
-  }
+  };
 
   // Alias window.fd.FileDrop class to just window.FileDrop since it's most used.
   root.FileDrop = global.FileDrop
