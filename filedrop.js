@@ -300,8 +300,8 @@
     base = base || {};
 
     for (var prop in base) {
-      if (overwrite || typeof child[prop] == 'undefined') {
-        child[prop] = base[prop]
+      if (base.hasOwnProperty(prop) && (overwrite || typeof child[prop] == 'undefined')) {
+        child[prop] = base[prop];
       }
     }
 
@@ -430,6 +430,7 @@
       } else if (typeof events == 'string') {
         return global.toArray(this.events[events]);
       }
+      break;
 
     case 2:
       events = global.toArray(events);
@@ -443,7 +444,7 @@
               arguments.callee.call(this, [event + ':' + ns[1]], null);
             }
           } else if (!ns[1]) {
-            this.events[ns[0]] = []
+            this.events[ns[0]] = [];
           } else if (this.events[ns[0]]) {
             for (var fi = this.events[ns[0]].length - 1; fi >= 0; fi--) {
               if (global.funcNS( this.events[ns[0]][fi] ) == ns[1]) {
@@ -465,9 +466,9 @@
   // 'this' must be set to the object which events are updated.
   global.previewToObject = function (events, funcs) {
     if (global.addEventsToObject(this, true, arguments)) {
-      return this
+      return this;
     } else {
-      throw 'Bad parameters for FileDrop preview().'
+      throw 'Bad parameters for FileDrop preview().';
     }
   };
 
@@ -482,7 +483,8 @@
     case 1:
       if (events && typeof events == 'object' && !global.isArray(events)) {
         for (var event in events) {
-          arguments.callee(obj, prepend, [event, events[event]])
+          if (events.hasOwnProperty(event))
+            arguments.callee(obj, prepend, [event, events[event]])
         }
 
         return true
@@ -517,12 +519,12 @@
   //? funcNS(function () { })   //=> 'foo'
   global.funcNS = function (func, ns) {
     if (typeof func != 'function') {
-      return func
+      return func;
     } else if (arguments.length == 1) {
-      return (func[global.nsProp] || '').toString()
+      return (func[global.nsProp] || '').toString();
     } else {
-      func[global.nsProp] = (ns || '').toString()
-      return func
+      func[global.nsProp] = (ns || '').toString();
+      return func;
     }
   };
 
